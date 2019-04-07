@@ -19,5 +19,5 @@ deploy:
   on:
     repo: puzzle-team-v2-0/wishlist-server
   run:
-  - "python wishlist_server/manage.py migrate"
+  - "python manage.py migrate"
   - restart
