@@ -8,10 +8,6 @@ install:
 - pip install -r requirements.txt
 script:
 - python manage.py test
-deploy:
-  provider: heroku
-  api_key:
-    secure: "Tq72NU+qYFzBSDhCrppajjH3H40vow7KYMH145hM9UqC87t0e3xAn+EgZBZ2Z17EYtQSWA6qflJtcNiKEqC7brAXXz0G3TCw1v43gVltIrrbyHWTPu2wUj6q3cOyLduuBF072KJkc4WKIyy0xFZqtwXuCHdp39Y7sR7KmED7FB9nyr27M1Zw1u+aWMzpJbt135SEjHh5YQ15jdqHQ5unP53ER0oQ93YuHLs5HSHRfUBLxGb7uzVvK9YDuZBFNVyGULZMty0Vv2fM3tQy3g0qYPA3VmVIAyVD3IIwMAV6pscH86cyRDM2ABvBRKiowlizG9Rq8hCO14oVcOojl+P4Mn+fI9qvPYVOOXB4ZohNTwXq0EKPGDoE6XGkcUjwCa0R0qf1ce5AyS7gNpacHexP+XwFXZxdHmUqFhRjeZBHggZeIJiwNzpYqnwTka2YOy9jADppJtKe357fkEsPy8haA5/iTQtKbAmyNA49GnQdi2xivgHQGwe2dd2QZkSVyY1C0g+PJz3GD5eHyxRfPeeC6WPnlWKJM+9wfkjlvAG+OTLy8dtal/WqV+gGppFNAhSIO7mZTXam9/ikh0ivir5hKeQlna9El7u+mGOh2Av4bauygC9PJxecE+RpqherEcedCSwGRTs+8BjbqKdLZzW5AUvzJDy7XOKoG8UAhsY7kds="
 notifications:
   slack:
     on_failure: always
