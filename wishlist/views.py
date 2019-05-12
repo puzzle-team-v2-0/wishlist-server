@@ -6,6 +6,7 @@ from .serializers import UserSerializer, WishSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    http_method_names = ('post', )
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
