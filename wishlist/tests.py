@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -5,6 +6,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 from .models import Wish
+import math
 
 
 class AccountsTest(APITestCase):
@@ -226,8 +228,45 @@ class WishesTest(APITestCase):
         }
         wish = Wish.objects.create(**data, owner=self.test_user_1)
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.test_user_1.auth_token.key}')
-        response = self.client.get(reverse('wish-detail', args=[wish.id]), data, format='json')
+        response = self.client.get(reverse('wish-detail', args=[wish.id]), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self._check_wish({**data, 'id': wish.id}, wish, check_id=True)
         self._check_wish(response.data, wish, check_id=True)
+
+    def test_get_wish_list_paginated(self):
+        total = 173
+        page_size = settings.REST_FRAMEWORK["PAGE_SIZE"]
+        pages = math.ceil(total / page_size)
+        next_page = self.create_url
+        for i in range(total):
+            Wish.objects.create(title=f'test-{i}', owner=self.test_user_1)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.test_user_1.auth_token.key}')
+        for i in range(pages):
+            response = self.client.get(next_page, format='json')
+
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data['count'], total)
+            if not i:
+                self.assertEqual(response.data['previous'], None)
+            elif i == 1:
+                self.assertURLEqual(
+                    response.data['previous'],
+                    f'http://testserver{self.create_url}?limit={page_size}'
+                )
+            else:
+                self.assertURLEqual(
+                    response.data['previous'],
+                    f'http://testserver{self.create_url}?limit={page_size}&offset={page_size * (i - 1)}'
+                )
+            if i == pages - 1:
+                self.assertEqual(response.data['next'], None)
+                self.assertEqual(len(response.data['results']), total - (total // page_size) * page_size)
+            else:
+                self.assertURLEqual(
+                    response.data['next'],
+                    f'http://testserver{self.create_url}?limit={page_size}&offset={page_size * (i + 1)}'
+                )
+                self.assertEqual(len(response.data['results']), page_size)
+            next_page = response.data['next']
