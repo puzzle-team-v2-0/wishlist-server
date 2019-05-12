@@ -138,5 +138,5 @@ DATABASES['default'].update(db_from_env)
 
 try:
     from .local_settings import *
-except:
+except ImportError:
     pass
