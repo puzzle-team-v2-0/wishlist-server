@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from django.core.validators import MinValueValidator
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -18,7 +19,7 @@ class Wish(models.Model):
         related_name='wishes'
     )
     title = models.CharField(max_length=127)
-    price = models.FloatField(default=0.0)
-    link = models.CharField(max_length=127)
-    description = models.TextField()
+    price = models.FloatField(default=0.0, validators=[MinValueValidator(0)])
+    link = models.CharField(max_length=127, blank=True)
+    description = models.TextField(blank=True)
 

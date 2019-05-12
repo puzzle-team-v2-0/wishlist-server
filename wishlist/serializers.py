@@ -39,6 +39,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class WishSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return Wish.objects.create(owner=self.context['request'].user, **validated_data)
+
     class Meta:
         model = Wish
         fields = ('id', 'title', 'price', 'link', 'description')
