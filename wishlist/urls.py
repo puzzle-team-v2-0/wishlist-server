@@ -5,7 +5,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
-router.register(r'wishes', views.WishViewSet)
+router.register(r'wishes', views.WishViewSet, basename='wish')
 
 urlpatterns = [
     path('v1/', include(router.urls)),
